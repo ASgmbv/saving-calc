@@ -1,38 +1,35 @@
-import { Card, DatePicker, Input, Switch, Button  } from 'antd';
-import Meta from 'antd/lib/card/Meta';
-import './Calculator.css'
+import { Card, DatePicker, Input, Switch, Button } from "antd";
+import "./Calculator.css";
 
 const Calculator = (params) => {
-    return (
-        <Card
-         style={{ 
-             boxShadow: '-1px -2px 17px 3px rgba(145,145,145,1)', 
-            borderRadius: '5px', 
-            minWidth: '300px' 
-        }}
-        >
-            <h2 >Savings <br/> Calculator</h2>
-            <Switch /> <span>Calculate by total amount</span>
-            <p>Total amount</p>
-            <Input addonBefore='$'  />
-            <p>Reach goal by</p>
-            <DatePicker/>
+  return (
+    <div className="custom-card">
+      <h2 className="card-heading">
+        Saving <br /> Calculator
+      </h2>
 
-            <div className='result'>
-                <div className='result-amount' >
-                    <span>Monthly amount</span>
-                </div>
-                
-                <div className='details'>
-                    <span>'You are planning 26 monthly deposits <br/> to reach your $25000 goal by April 2022'</span>
-                </div>
-            </div>
+      <div class="switch-container">
+        <Switch id="switch" />
+        <label htmlFor="switch" className="switch-label">
+          Calculate by total amount
+        </label>
+      </div>
 
-            <Button 
-                type='primary'
-                style={{width : '100%', marginTop: '20px'}}>Finish</Button>
-        </Card> 
-    )
-}
+      <div className="form-field-container">
+        <label htmlFor="total-amount" className="form-field-label">
+          Total amount
+        </label>
+        <Input id="total-amount" addonBefore="$" />
+      </div>
 
-export default Calculator
+      <div className="form-field-container">
+        <label htmlFor="reach-goal-by" className="form-field-label">
+          Reach goal by
+        </label>
+        <Input id="reach-goal-by" addonBefore="<" addonAfter=">" />
+      </div>
+    </div>
+  );
+};
+// 16, 40, 75
+export default Calculator;
