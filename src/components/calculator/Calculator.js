@@ -1,10 +1,12 @@
-import { Card, DatePicker, Input, Button } from "antd";
 import "./Calculator.css";
-import Switch from "../Switch";
 import { useState } from "react";
+import Switch from "../Switch";
+import NumberInput from "../NumberInput";
+import DateInput from "../DateInput";
 
 const Calculator = (params) => {
   const [calculateByTotal, setCalculateByTotal] = useState(false);
+  const [totalAmount, setTotalAmount] = useState(0);
 
   return (
     <div className="custom-card">
@@ -29,15 +31,23 @@ const Calculator = (params) => {
         <label htmlFor="total-amount" className="form-field-label">
           Total amount
         </label>
-        {/* <Input id="total-amount" addonBefore="$" /> */}
-        <input type="number" className="" />
+        <NumberInput
+          value={totalAmount}
+          onChange={(e) => {
+            let v = e.target.value;
+            let numbers = /^[0-9]+$/;
+
+            setTotalAmount(v);
+          }}
+        />
       </div>
 
       <div className="form-field-container">
         <label htmlFor="reach-goal-by" className="form-field-label">
           Reach goal by
         </label>
-        <Input id="reach-goal-by" addonBefore="<" addonAfter=">" />
+        <DateInput />
+        {/* <Input id="reach-goal-by" addonBefore="<" addonAfter=">" /> */}
       </div>
 
       <div className="results-card">
@@ -51,7 +61,7 @@ const Calculator = (params) => {
         </div>
       </div>
 
-      <Button
+      <button
         style={{
           width: "100%",
           marginTop: "20px",
@@ -59,7 +69,7 @@ const Calculator = (params) => {
         type="primary"
       >
         Finish
-      </Button>
+      </button>
     </div>
   );
 };
