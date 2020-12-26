@@ -5,7 +5,7 @@ const Calculator = (params) => {
   return (
     <div className="custom-card">
       <h2 className="card-heading">
-        Saving <br /> Calculator
+        Savings <br /> Calculator
       </h2>
 
       <div class="switch-container">
@@ -27,6 +27,17 @@ const Calculator = (params) => {
           Reach goal by
         </label>
         <Input id="reach-goal-by" addonBefore="<" addonAfter=">" />
+      </div>
+
+      <div className="results-card">
+        <div className="results">
+          <span className="amount-text">Monthly Amount</span>
+          <span className="amount-value">$978</span>
+        </div>
+        <div className="details">
+          You are planning 26 monthly deposits to reach your $25000 goal by
+          April 2022
+        </div>
       </div>
     </div>
   );

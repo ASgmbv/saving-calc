@@ -30,18 +30,34 @@
   display: block;
 }
 
+.results-card {
+  border-radius: 3px;
+  border: 1px solid rgb(200, 200, 200);
+  width: 100%;
+  margin-top: 30px;
+}
+
+.results {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px;
+}
+
+.amount-text {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.amount-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: rgb(0, 102, 243);
+}
+
 .details {
-  background-color: rgb(224, 224, 224);
-  padding: 10px;
+  background-color: rgb(240, 246, 249);
   font-size: 12px;
-}
-
-.result {
-  border-radius: 5px;
-  border: 1px solid rgba(161, 161, 161, 0.3);
-  margin-top: 20px;
-}
-
-.result-amount {
-  padding: 20px 15px;
+  font-weight: 500;
+  padding: 10px;
 }
