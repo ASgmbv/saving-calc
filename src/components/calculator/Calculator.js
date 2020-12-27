@@ -32,7 +32,13 @@ function reducer(state, action) {
         monthlyAmount: action.payload,
         totalAmount: action.payload * diff,
       };
-    case "incrementMonth":
+    case "incrementMonth": {
+      const diff =
+        differenceInCalendarMonths(
+          addMonths(state.date, 1),
+          new Date().setDate(1)
+        ) + 1;
+
       return {
         ...state,
         date: addMonths(state.date, 1),
@@ -43,13 +49,18 @@ function reducer(state, action) {
           ? state.totalAmount
           : state.monthlyAmount * diff,
       };
-    case "decrementMonth":
+    }
+    case "decrementMonth": {
+      const newDate =
+        compareAsc(state.date, new Date().setDate(1)) === 1
+          ? addMonths(state.date, -1)
+          : state.date;
+      const diff =
+        differenceInCalendarMonths(newDate, new Date().setDate(1)) + 1;
+
       return {
         ...state,
-        date:
-          compareAsc(state.date, new Date().setDate(1)) === 1
-            ? addMonths(state.date, -1)
-            : state.date,
+        date: newDate,
         monthlyAmount: state.byTotalAmount
           ? Math.ceil(state.totalAmount / diff)
           : state.monthlyAmount,
@@ -57,6 +68,7 @@ function reducer(state, action) {
           ? state.totalAmount
           : state.monthlyAmount * diff,
       };
+    }
 
     default:
       throw new Error();
