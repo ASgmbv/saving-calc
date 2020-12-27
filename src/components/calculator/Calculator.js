@@ -1,12 +1,82 @@
 import "./Calculator.css";
-import { useState } from "react";
+import { useReducer } from "react";
 import Switch from "../Switch";
 import NumberInput from "../NumberInput";
 import DateInput from "../DateInput";
 
-const Calculator = (params) => {
-  const [calculateByTotal, setCalculateByTotal] = useState(false);
-  const [totalAmount, setTotalAmount] = useState(0);
+import {
+  addMonths,
+  format,
+  compareAsc,
+  differenceInCalendarMonths,
+} from "date-fns";
+
+function reducer(state, action) {
+  let diff = differenceInCalendarMonths(state.date, new Date().setDate(1)) + 1;
+
+  switch (action.type) {
+    case "toggleByTotalAmount":
+      return {
+        ...state,
+        byTotalAmount: !state.byTotalAmount,
+      };
+    case "setTotalAmount":
+      return {
+        ...state,
+        totalAmount: action.payload,
+        monthlyAmount: Math.ceil(action.payload / diff),
+      };
+    case "setMonthlyAmount":
+      return {
+        ...state,
+        monthlyAmount: action.payload,
+        totalAmount: action.payload * diff,
+      };
+    case "incrementMonth":
+      return {
+        ...state,
+        date: addMonths(state.date, 1),
+        monthlyAmount: state.byTotalAmount
+          ? Math.ceil(state.totalAmount / diff)
+          : state.monthlyAmount,
+        totalAmount: state.byTotalAmount
+          ? state.totalAmount
+          : state.monthlyAmount * diff,
+      };
+    case "decrementMonth":
+      return {
+        ...state,
+        date:
+          compareAsc(state.date, new Date().setDate(1)) === 1
+            ? addMonths(state.date, -1)
+            : state.date,
+        monthlyAmount: state.byTotalAmount
+          ? Math.ceil(state.totalAmount / diff)
+          : state.monthlyAmount,
+        totalAmount: state.byTotalAmount
+          ? state.totalAmount
+          : state.monthlyAmount * diff,
+      };
+
+    default:
+      throw new Error();
+  }
+}
+
+const initialState = {
+  byTotalAmount: false,
+  totalAmount: 0,
+  monthlyAmount: 0,
+  date: new Date().setDate(1),
+};
+
+const Calculator = () => {
+  const [
+    { byTotalAmount, totalAmount, monthlyAmount, date },
+    dispatch,
+  ] = useReducer(reducer, initialState);
+
+  let diff = differenceInCalendarMonths(date, new Date().setDate(1)) + 1;
 
   return (
     <div className="custom-card">
@@ -14,30 +84,35 @@ const Calculator = (params) => {
         Savings <br /> Calculator
       </h2>
 
-      <div class="switch-container">
+      <div className="switch-container">
         <Switch
           id="switch"
-          checked={calculateByTotal}
+          checked={byTotalAmount}
           onChange={(e) => {
-            setCalculateByTotal(e.target.checked);
+            dispatch({ type: "toggleByTotalAmount" });
           }}
         />
         <label htmlFor="switch" className="switch-label">
-          Calculate by total amount
+          {byTotalAmount
+            ? "Calculate by total amount"
+            : "Calculate by monthly saving"}
         </label>
       </div>
 
       <div className="form-field-container">
         <label htmlFor="total-amount" className="form-field-label">
-          Total amount
+          {byTotalAmount ? "Total Amount" : "Monthly Amount"}
         </label>
         <NumberInput
-          value={totalAmount}
+          value={byTotalAmount ? totalAmount : monthlyAmount}
           onChange={(e) => {
-            let v = e.target.value;
-            let numbers = /^[0-9]+$/;
-
-            setTotalAmount(v);
+            let val = e.target.value;
+            let num = parseInt(val ? val : 0, 10);
+            if (byTotalAmount) {
+              dispatch({ type: "setTotalAmount", payload: num });
+            } else {
+              dispatch({ type: "setMonthlyAmount", payload: num });
+            }
           }}
         />
       </div>
@@ -46,27 +121,45 @@ const Calculator = (params) => {
         <label htmlFor="reach-goal-by" className="form-field-label">
           Reach goal by
         </label>
-        <DateInput />
-        {/* <Input id="reach-goal-by" addonBefore="<" addonAfter=">" /> */}
+        <DateInput
+          value={format(date, "LLLL, yyyy")}
+          onLeftClick={() => dispatch({ type: "decrementMonth" })}
+          onRightClick={() => dispatch({ type: "incrementMonth" })}
+        />
       </div>
 
       <div className="results-card">
         <div className="results">
-          <span className="amount-text">Monthly Amount</span>
-          <span className="amount-value">$978</span>
+          <span className="amount-text">
+            {byTotalAmount ? "Monthly Amount" : "Total Amount"}
+          </span>
+          <span className="amount-value">
+            ${byTotalAmount ? monthlyAmount : totalAmount}
+          </span>
         </div>
         <div className="details">
-          You are planning 26 monthly deposits to reach your $25000 goal by
-          April 2022
+          {byTotalAmount
+            ? `You are planning ${diff} monthly deposits to reach your $${totalAmount} goal by ${format(
+                date,
+                "LLLL, yyyy"
+              )}.`
+            : `You are saving ${monthlyAmount} monthly to save ${totalAmount} by ${format(
+                date,
+                "LLLL, yyyy"
+              )}.`}
         </div>
       </div>
 
       <button
         style={{
           width: "100%",
-          marginTop: "20px",
+          backgroundColor: "#2F80ED",
+          borderRadius: "5px",
+          border: "none",
+          color: "white",
+          padding: "10px",
+          marginTop: "30px",
         }}
-        type="primary"
       >
         Finish
       </button>

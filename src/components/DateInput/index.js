@@ -1,13 +1,19 @@
 import "./DateInput.css";
 
-const DateInput = (params) => {
+const DateInput = ({ onLeftClick, onRightClick, ...props }) => {
   return (
     <div className="custom-date-input-container">
-      <button className="custom-date-input-button custom-date-input-button-left">
+      <button
+        className="custom-date-input-button custom-date-input-button-left"
+        onClick={onLeftClick}
+      >
         &lt;
       </button>
-      <input type="date" className="custom-date-input" />
-      <button className="custom-date-input-button custom-date-input-button-right">
+      <input readOnly className="custom-date-input" {...props} />
+      <button
+        className="custom-date-input-button custom-date-input-button-right"
+        onClick={onRightClick}
+      >
         &gt;
       </button>
     </div>

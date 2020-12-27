@@ -39,6 +39,7 @@ input.custom-number-input[type="number"] {
 .custom-number-input {
   flex: 1;
   padding: 10px;
+  padding-right: 40px;
   border: none;
   text-align: center;
   font-size: 15px;
